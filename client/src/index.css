@@ -1,0 +1,38 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+*{
+    box-sizing: border-box;
+}
+main , .BodyText5{
+    background-color: #bc382e;
+}
+.BodyText2{
+    background-color: #ff8000;;
+}
+.img1{
+    margin-left: 36rem;
+    rotate: -2deg;
+}
+.BodyText3{
+    background-color: #388d80;
+}
+.BodyText4{
+    background-color: #2f454fc6;
+}
+.BodyText5{
+    background-color: #bc382e;
+}
+.BodyText6{
+    background-color: rgb(255, 128, 0);
+    background-image: url('https://www.blogger.com/about/img/sections/millions/millions-map_2x.png'),
+    url('https://www.blogger.com/about/img/sections/millions/millions-markers_2x.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    }
+
+    .footer{
+        background-color: #1d2b34;
+    }
