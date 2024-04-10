@@ -22,7 +22,7 @@ require("dotenv").config();
 app.use(
     cors({
         // origin: "http://localhost:3000", 
-        origin: "https://blog-app-mu-vert.vercel.app/login",
+        origin: "https://blog-app-mu-vert.vercel.app",
         methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type"],
         credentials: true,
