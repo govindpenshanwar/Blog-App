@@ -4,8 +4,8 @@ import { Tooltip, InputBase, Button, TextareaAutosize } from "@mui/material";
 import SendSharpIcon from "@mui/icons-material/SendSharp";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import toast from 'react-hot-toast'
-import baseUrl from '../../utils/baseUrl.js'
+import toast from "react-hot-toast";
+import baseUrl from "../../utils/baseUrl.js";
 
 function Update() {
     const navigate = useNavigate();
@@ -13,35 +13,39 @@ function Update() {
     const [post, setPost] = useState({
         title: "",
         description: "",
-        // username: "",
         categories: "",
         picture: null,
         createdDate: new Date(),
     });
 
-
     useEffect(() => {
         const fetchData = async () => {
-            const api = await axios.get(`${baseUrl}/getData/${id}`, { withCredentials: true });
+            const api = await axios.get(`${baseUrl}/getData/${id}`, {
+                withCredentials: true,
+            });
             const response = api.data;
             setPost(response);
             console.log("Posts", response);
-        }
+        };
         fetchData();
-    }, [id])
+    }, [id]);
 
-    const handleChange = async (e) => {
+    const handleChange = async () => {
         try {
-            const formData = new FormData();
-            formData.append("title", post.title);
-            formData.append("description", post.description);
-            formData.append("picture", post.picture);
+            // const formData = new FormData();
+            // formData.append("title", post.title);
+            // formData.append("description", post.description);
+            // formData.append("picture", post.picture);
 
             const response = await axios.put(
-                `http://localhost:4000/updateBlog/${id}`,
-                formData, {
-                withCredentials: true
-            }
+                `${baseUrl}/updateBlog/${id}`,
+                {
+                    title: post.title,
+                    description: post.description
+                },
+                {
+                    withCredentials: true
+                }
             );
             const blog = response.data;
             console.log("new blog => ", blog);
@@ -52,7 +56,9 @@ function Update() {
         }
     };
 
-    const blogImage = post.picture ? require('../Assets/blog4.jpg') : post.picture
+    const blogImage = post.picture
+        ? require("../Assets/blog4.jpg")
+        : post.picture;
 
     return (
         <div className=" mx-12 mt-1">

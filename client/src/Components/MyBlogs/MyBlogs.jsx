@@ -23,11 +23,7 @@ function MyBlogs() {
                 const API = await axios.get(`${baseUrl}/getMyBlogs/${username}`, { withCredentials: true });
                 const response = API.data;
                 console.log("Response => ", response);
-                if (response && typeof response === 'object') {
-                    setBlogData([response]);
-                } else {
-                    console.error("Invalid data format: expected object, received: ", response);
-                }
+                setBlogData(response);
 
             } catch (error) {
                 console.error("Err at fetching Data => ", error.message);
@@ -45,44 +41,38 @@ function MyBlogs() {
                 </div>
             ) :
 
-                <div className="flex  flex-wrap gap-8 ml-10 mt-24 mb-5  ">
+                <div className="flex  flex-wrap md:gap-14 items-center justify-center sm:gap-6 gap-4   mt-24 mb-5  ">
 
                     {(blogData.map((blog) => (
                         <Link to={`/singleBlog/${blog._id}`}>
-                            <Card
-                                key={blog._id}
-                                className="h-[500px] overflow-y-scroll"
-                                sx={{ width: 345 }}
-                            >
-                                <CardActionArea>
-                                    <CardMedia
-                                        component="img"
-                                        height="140px"
-                                        className="w-full h-64"
-                                        // image={blog}
-                                        image={blog.picture}
-                                        alt="blog image"
-                                    />
+                            <div key={blog._id}>
+                                <Card
+                                    className="h-[500px] overflow-y-scroll"
+                                    sx={{ width: 345 }}
+                                >
+                                    <CardActionArea>
+                                        <CardMedia
+                                            component="img"
+                                            height="140px"
+                                            className="w-full h-64"
+                                            // image={blog}
+                                            image={blog.picture}
+                                            alt="blog image"
+                                        />
 
-                                    <CardContent>
-                                        <p className="text-xl font-bold ">
-                                            {/* My Blog */}
-                                            {blog.title}
-                                        </p>
-                                        <div className="h-36 overflow-y-auto">
-                                            <p className="text-base font-normal">
-                                                {/* Lorem, ipsum dolor sit amet consectetur adipisicing elit. Similique alias asperiores sint ipsum neque aperiam quas temporibus accusantium libero error sit itaque enim laborum, provident rem soluta corrupti sequi consectetur? */}
-                                                {blog.description}
+                                        <CardContent>
+                                            <p className="text-xl font-bold ">
+                                                {blog.title}
                                             </p>
-                                        </div>
-                                    </CardContent>
-                                </CardActionArea>
-                                <CardActions>
-                                    <Button size="small" color="primary">
-                                        Share
-                                    </Button>
-                                </CardActions>
-                            </Card>
+                                            <div className="h-36 overflow-y-scroll">
+                                                <p className="text-base font-normal">
+                                                    {blog.description}
+                                                </p>
+                                            </div>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </div>
                         </Link>
 
                     )))}

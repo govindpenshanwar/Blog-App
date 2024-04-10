@@ -7,7 +7,7 @@ const getAuthToken = () => {
             const tokenValue = token
             // .split('=')[1]; // Extract token value from cookie
             const payload = JSON.parse(atob(tokenValue.split('.')[1])); // Decode token payload
-            console.log(payload);
+            // console.log(payload);
             const { username } = payload;
             return username;
         } catch (error) {

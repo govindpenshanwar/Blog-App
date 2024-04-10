@@ -110,7 +110,7 @@ function Login({ setIsAuthenticated }) {
             className="sm:w-60 w-48"
             endIcon={<LoginSharpIcon />}
           >
-            Login
+            Continue
           </Button>
 
           <p className="text-center -m-4">OR</p>

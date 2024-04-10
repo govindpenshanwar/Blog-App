@@ -116,7 +116,7 @@ function App() {
       <UserProvider>
         <div>
           <Routes>
-            <Route path="/" element={<Layout />} />
+            {/* <Route path="/" element={<Layout />} /> */}
             <Route
               path="/login"
               element={

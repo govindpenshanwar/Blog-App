@@ -8,32 +8,36 @@ const User = require("./Models/model");
 const bcryptjs = require("bcryptjs");
 const Blog = require("./Models/blogModel");
 const path = require("path");
-const jwt = require('jsonwebtoken');
-const authenticateToken = require('./middlewares/authToken');
-const coookieParser = require('cookie-parser');
-const commentsSchema = require('./Models/comments')
-const upload = require('./middlewares/multer');
-const cloudinary = require('cloudinary').v2;
-const { v4: uuidv4 } = require('uuid');
-const fs = require('fs').promises;
+const jwt = require("jsonwebtoken");
+// const authenticateToken = require("./middlewares/authToken");
+const coookieParser = require("cookie-parser");
+const commentsSchema = require("./Models/comments");
+const upload = require("./middlewares/multer");
+const cloudinary = require("cloudinary").v2;
+const { v4: uuidv4 } = require("uuid");
+const fs = require("fs").promises;
 
-require('dotenv').config();
+require("dotenv").config();
 
-app.use(cors(
-    { credentials: true, origin: 'http://localhost:3000' }
-));
+app.use(
+    cors({
+        origin: "http://localhost:3000", // Replace with your allowed origin
+        methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed methods
+        allowedHeaders: ["Content-Type"],
+        credentials: true,
+    })
+);
 
-app.use(coookieParser())
+app.use(coookieParser());
 app.use(express.json({ limit: "40mb" }));
 app.use(bodyParser.urlencoded({ limit: "40mb", extended: true }));
 // app.use("/Uploads", express.static(path.join(__dirname, "/Uploads")));
 
-
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
-})
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 app.get("/", (req, res) => {
     res.json("Hello World");
@@ -52,14 +56,14 @@ app.get("/getData", async (req, res) => {
 app.get("/getMyBlogs/:username", async (req, res) => {
     try {
         const { username } = req.params;
-        const blog = await Blog.findOne({ username });
+        const blog = await Blog.find({ username });
         if (!blog) {
             return res.status(404).json({
                 message: "No blog found",
-                success: false
+                success: false,
             });
         }
-        res.json(blog);
+        res.status(200).json(blog);
     } catch (error) {
         console.error("Error fetching blog data:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
@@ -108,26 +112,22 @@ app.post("/loginData", async (req, res) => {
 
         const tokenData = {
             id: user._id,
-            username: user.username
+            username: user.username,
         };
 
         const tokenSecret = "Shhh";
         const token = await jwt.sign(tokenData, tokenSecret, {
-            expiresIn: "1d"
+            expiresIn: "1d",
         });
 
-        res.cookie('token', token, {
-            httpOnly: false
+        res.cookie("token", token, {
+            httpOnly: false,
         });
-        return res
-            .status(200)
-            .json({
-                message: "Login Successfull",
-                success: true,
-                token
-            })
-
-
+        return res.status(200).json({
+            message: "Login Successfull",
+            success: true,
+            token,
+        });
     } catch (error) {
         console.error("Err at login Route => ", error.message);
     }
@@ -136,19 +136,18 @@ app.post("/loginData", async (req, res) => {
 app.get("/logout", async (req, res) => {
     try {
         // res.clearCookie('token',expiresIn = Date.now(0));
-        res.cookie('token', '', {
+        res.cookie("token", "", {
             expires: new Date(0),
-            httpOnly: true
-        })
+            httpOnly: true,
+        });
         res.status(200).json({
             message: "Logout Successfull",
             success: true,
-        })
-
+        });
     } catch (error) {
         console.error("Err at logout route => ", error.message);
     }
-})
+});
 
 app.post("/signUpData", async (req, res) => {
     const { username, email, password } = await req.body;
@@ -230,10 +229,8 @@ app.post("/blogData", upload, async (req, res) => {
         const { title, description, categories } = req.body;
         const picture = req.file;
 
-
-
         if (!picture) {
-            return res.status(400).json({ error: 'No picture uploaded' });
+            return res.status(400).json({ error: "No picture uploaded" });
         }
 
         // // Creating a unique filename for the temporary file
@@ -243,22 +240,17 @@ app.post("/blogData", upload, async (req, res) => {
         // // Writing the buffer data to the temporary file
         // await fs.writeFile(tempFilePath, picture.buffer);
 
-
-
         // const result = await cloudinary.uploader.upload(tempFilePath, {
         //     resource_type: "auto"
         // });
 
-
         // await fs.unlink(tempFilePath);
         // const cloudinaryUrl = result.url;
-
 
         // const decodedToken = jwt.verify(req.cookies.token, 'Shhh');
         // const { username } = decodedToken;
 
         // const createdDate = new Date();
-
 
         // const newBlog = new Blog({
         //     title,
@@ -267,7 +259,6 @@ app.post("/blogData", upload, async (req, res) => {
         //     picture: cloudinaryUrl,
         //     createdDate,
         // });
-
 
         // await newBlog.save();
 
@@ -280,167 +271,141 @@ app.post("/blogData", upload, async (req, res) => {
         //     username
         // });
 
+        const result = await cloudinary.uploader
+            .upload_stream(
+                {
+                    resource_type: "auto",
+                },
+                async (error, result) => {
+                    if (error) {
+                        console.error("Error uploading image to Cloudinary:", error);
+                        return res.status(500).json({
+                            error: "Failed to upload image to Cloudinary",
+                            success: false,
+                        });
+                    }
 
-        const result = await cloudinary.uploader.upload_stream({
-            resource_type: "auto"
-        }, async (error, result) => {
-            if (error) {
-                console.error('Error uploading image to Cloudinary:', error);
-                return res.status(500).json({
-                    error: 'Failed to upload image to Cloudinary',
-                    success: false
-                });
-            }
+                    const cloudinaryUrl = result.url;
 
-            const cloudinaryUrl = result.url;
+                    const decodedToken = jwt.verify(req.cookies.token, "Shhh");
+                    const { username } = decodedToken;
 
-            const decodedToken = jwt.verify(req.cookies.token, 'Shhh');
-            const { username } = decodedToken;
+                    const createdDate = new Date();
 
-            const createdDate = new Date();
+                    const newBlog = new Blog({
+                        title,
+                        username,
+                        description,
+                        picture: cloudinaryUrl,
+                        categories,
+                        createdDate,
+                    });
 
-            const newBlog = new Blog({
-                title,
-                username,
-                description,
-                picture: cloudinaryUrl,
-                categories,
-                createdDate,
-            });
+                    await newBlog.save();
 
-            await newBlog.save();
-
-            res.status(200).json({
-                message: 'Blog Added Successfully',
-                title,
-                description,
-                picture: cloudinaryUrl,
-                createdDate,
-                username
-            });
-        }).end(picture.buffer);
-
-
-
+                    res.status(200).json({
+                        message: "Blog Added Successfully",
+                        title,
+                        description,
+                        picture: cloudinaryUrl,
+                        createdDate,
+                        username,
+                    });
+                }
+            )
+            .end(picture.buffer);
     } catch (error) {
-        console.error('Error at blogData route => ', error);
+        console.error("Error at blogData route => ", error);
         res.status(500).json({
             error: error.message,
-            success: false
+            success: false,
         });
     }
 });
 
-app.post('/comments', async (req, res) => {
+app.post("/comments", async (req, res) => {
     const { name, postId, comments, date } = await req.body;
     try {
         const newComment = new commentsSchema({
             name,
             postId,
             comments,
-            date
+            date,
         });
 
         await newComment.save();
 
         res.status(200).json({
             success: true,
-            message: "Comment Saved Successfully"
+            message: "Comment Saved Successfully",
         });
     } catch (error) {
         console.error("Err at comment route => ", error.message);
     }
-})
+});
 
-app.get('/getComments/:id', async (req, res) => {
-    const postId = req.params.id
+app.get("/getComments/:id", async (req, res) => {
+    const postId = req.params.id;
     try {
         const data = await commentsSchema.find({ postId });
         res.status(200).json({
             success: true,
-            data
-        })
-
+            data,
+        });
     } catch (error) {
         console.error("err getting posts from db => ", error.message);
     }
-})
+});
 
-app.delete('/deleteComment/:id', async (req, res) => {
+app.delete("/deleteComment/:id", async (req, res) => {
     const id = req.params.id;
     try {
         const deletedComment = await commentsSchema.findByIdAndDelete(id);
         return res.json({
             success: true,
-            message: "ID Deleted"
-        })
-
+            message: "ID Deleted",
+        });
     } catch (error) {
         console.error("err deleting comment => ", error.message);
     }
-})
+});
 
-// app.put('/updateBlog/:id', async (req, res) => {
-//     try {
-//         const post = await Blog.findById(req.params.id);
-
-//         if (!post) {
-//             return res.status(404).json({
-//                 success: false,
-//                 message: "No post found"
-//             })
-//         };
-
-//         const result = await Blog.findByIdAndUpdate(req.params.id, { $set: req.body });
-//         console.log(result);
-
-//         return res.status(200).json({
-//             success: true,
-//             message: "Blog updated"
-//         })
-
-//     } catch (error) {
-//         console.error("Err updating post => ", error.message);
-//     }
-// })
-
-app.put('/updateBlog/:id', async (req, res) => {
+app.put("/updateBlog/:id", async (req, res) => {
     try {
         const post = await Blog.findById(req.params.id);
+        const { title, description } = req.body;
 
         if (!post) {
             return res.status(404).json({
                 success: false,
-                message: "No post found"
-            })
-        };
+                message: "No post found",
+            });
+        }
 
-        const result = await Blog.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
-
+        const updatedPost = { title, description };
+        const result = await Blog.findByIdAndUpdate(req.params.id, {
+            $set: updatedPost,
+        });
         return res.status(200).json({
             success: true,
-            message: "Blog updated"
-        })
-
+            message: "Blog updated",
+        });
     } catch (error) {
         console.error("Err updating post => ", error.message);
     }
-
 });
 
-
-app.delete('/deleteBlog/:id', async (req, res) => {
+app.delete("/deleteBlog/:id", async (req, res) => {
     try {
         const deletedPost = await Blog.findByIdAndDelete(req.params.id);
         return res.status(200).json({
             success: true,
-            message: "Blog Deleted Successfully"
-        })
-
+            message: "Blog Deleted Successfully",
+        });
     } catch (error) {
         console.error("Err at delete route => ", error.message);
     }
-})
+});
 
 connect();
 app.listen(port, () => {

@@ -9,43 +9,46 @@ function Categories() {
 
 
     return (
-        <div >
-            <Link to={`/createPost?category=${category || ''}`}>
-                <Button
-                    variant='contained'
-                    color='error'
-                    size='large'
-                    style={{ marginTop: '20px', marginLeft: '15px' }}
-                >
-                    Create Blog
-                </Button>
-            </Link>
+        <div className='md:max-w-max sm:max-w-max max-w-max '>
+            <div className='flex flex-col'>
+                <Link to={`/createPost?category=${category || ''}`}>
+                    <Button
+                        variant='contained'
+                        color='error'
+                        size='large'
+                        style={{ marginTop: '20px', marginLeft: '15px' }}
+                    >
+                        Create Blog
+                    </Button>
+                </Link>
 
-            <Table
-                style={{ border: '1px solid rgba(224,224,224,1)', marginTop: '10px', marginLeft: '15px' }}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>
-                            <Link to={"/home"}>
-                                All Categories
-                            </Link>
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {
-                        categories.map(category => (
-                            <TableRow key={category.id}>
-                                <TableCell style={{ fontSize: '1.1rem', fontWeight: 'revert-layer' }} >
-                                    <Link to={`/home?category=${category.type}`}>
-                                        {category.type}
-                                    </Link>
-                                </TableCell>
-                            </TableRow>
-                        ))
-                    }
-                </TableBody>
-            </Table>
+                <Table className='grid col-span-2'
+                    style={{ border: '1px solid rgba(224,224,224,1)', marginTop: '10px', marginLeft: '15px' }}
+                >
+                    <TableHead>
+                        <TableRow>
+                            <TableCell style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>
+                                <Link to={"/home"}>
+                                    All Categories
+                                </Link>
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {
+                            categories.map(category => (
+                                <TableRow key={category.id}>
+                                    <TableCell style={{ fontSize: '1.1rem', fontWeight: 'revert-layer' }} >
+                                        <Link to={`/home?category=${category.type}`}>
+                                            {category.type}
+                                        </Link>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        }
+                    </TableBody>
+                </Table>
+            </div>
         </div>
     )
 }

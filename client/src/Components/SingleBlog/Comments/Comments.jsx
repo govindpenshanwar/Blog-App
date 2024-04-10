@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import getAuthToken from '../../../utils/authToken';
 import PersonIcon from '@mui/icons-material/Person';
-import { TextareaAutosize } from '@mui/material';
+import { TextareaAutosize, TextField, InputAdornment } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import axios from 'axios';
 import AllComments from './AllComments';
@@ -59,16 +59,30 @@ function Comments({ blog }) {
         fetchData();
     }, [blog._id, toogle])
     return (
-        <div className=' ml-40 items-center justify-center mb-5    '>
-            <div className='flex flex-row mt-32  ml-28 w-2/3 items-center  gap-1'>
-                <PersonIcon fontSize='large' />
-                <TextareaAutosize
+        <div className=' md:ml-40 ml-0 items-center justify-center mb-5    '>
+            <div className='flex flex-row mt-32  sm:ml-28 ml-16  w-2/3 items-center justify-center gap-1'>
+                {/* <TextareaAutosize
                     minRows={5}
                     placeholder="What's on your mind ?"
                     value={comment.comments}
                     onChange={(e) => handleChange(e)}
                     className='rounded-lg outline-zinc-200'
                     style={{ width: '100%', height: '55px', padding: '12px 10px' }}
+                /> */}
+                <TextField
+                    placeholder="What's on your mind ?"
+                    value={comment.comments}
+                    onChange={(e) => handleChange(e)}
+                    className='rounded-lg '
+                    style={{ width: '100%', height: '55px', padding: "" }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <PersonIcon fontSize='medium' />
+                            </InputAdornment>
+                        ),
+                    }}
+
                 />
                 <button
                     onClick={addComment}

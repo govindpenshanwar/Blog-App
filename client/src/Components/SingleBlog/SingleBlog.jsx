@@ -45,8 +45,8 @@ function SingleBlog() {
 
   return (
     <>
-      <div className="container m-5 mt-20 w-full ml-16  flex flex-col   ">
-        <div className="flex items-center justify-center">
+      <div className="container m-5 mt-20 w-full sm:ml-16  flex flex-col sm:px-2 px-5  ">
+        <div className="flex items-center justify-center  ">
           <img
             className="w-[30rem] "
             src={blog.picture}
@@ -79,7 +79,7 @@ function SingleBlog() {
           {blog.categories}
         </h2>
 
-        <p className="w-full text-left font-semibold font-sans">
+        <p className="w-full  text-justify font-semibold font-sans">
           Description: {blog.description}
         </p>
       </div>

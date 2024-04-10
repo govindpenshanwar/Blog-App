@@ -12,7 +12,7 @@ import { deepPurple } from '@mui/material/colors';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Copyright from '../Footer/Copyright';
 import baseUrl from '../../utils/baseUrl'
-
+import toast from 'react-hot-toast'
 
 function SignUp() {
   const [username, setUsername] = useState("");
@@ -23,7 +23,7 @@ function SignUp() {
 
   const handleSignUp = async () => {
     if (username === "" && email === "" && password === "") {
-      alert("Please Enter Credentials!!")
+      toast.error("Please Enter Credentials")
     } else {
       try {
         const API = await axios.post(`${baseUrl}/signUpData`, { username, email, password });
@@ -32,7 +32,8 @@ function SignUp() {
       } catch (error) {
         console.error("Error is:", error);
       }
-      navigate("/home")
+      toast.success("Registration Successfull !!")
+      navigate("/login")
     }
 
   }
@@ -45,17 +46,25 @@ function SignUp() {
 
   return (
     <form onSubmit={handleSubmit} style={{ borderRightColor: '#FAF5FF' }}>
-      <div className='  mt-44 ml-80 '>
-        <div className='flex flex-col gap-6 ml-48 w-96 mt-10'>
+      <div
+        className="flex items-center justify-center mt-24 mb-10 "
+      // className='  mt-44 ml-80 '
+      >
+        <div
+          className="flex flex-col gap-6 items-center  mt-10"
+        // className='flex flex-col gap-6 ml-48 w-96 mt-10'
 
-          <span className='ml-44' > <Avatar sx={{ bgcolor: deepPurple[600] }}><LockOutlinedIcon /></Avatar> </span>
-          <span className='text-center text-xl font-mono font-bold'>Let's Dive in the world of Blogs😉</span>
+        >
+
+          <span className='' > <Avatar sx={{ bgcolor: deepPurple[600] }}><LockOutlinedIcon /></Avatar> </span>
+          <span className='text-center text-lg sm:text-xl font-mono font-bold'>Let's Dive in the world of Blogs😉</span>
 
           <TextField
             variant='outlined'
             label='Username'
             color='primary'
             value={username}
+            className="sm:w-96 w-80"
             onChange={(e) => setUsername(e.target.value)}
             name='username'
             InputProps={{
@@ -71,6 +80,7 @@ function SignUp() {
             label='Email'
             color='primary'
             value={email}
+            className="sm:w-96 w-80"
             onChange={(e) => setEmail(e.target.value)}
             name='password'
             InputProps={{
@@ -88,6 +98,7 @@ function SignUp() {
             color='primary'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="sm:w-96 w-80"
             name='confirmPassword'
             InputProps={{
               startAdornment: (
@@ -103,9 +114,21 @@ function SignUp() {
             color='primary'
             type='submit'
             endIcon={<LoginSharpIcon />}
+            className="sm:w-60 w-48"
           // onClick={handleSignUp}
           >Sign In</Button>
+          <div className='flex flex-col text-center gap-4 '>
+            <p>Already have an account ?</p>
+            <Button
+              variant='text'
+              color='primary'
+              type='submit'
+              onClick={() => {
+                navigate('/login')
+              }}
+            >Login</Button>
 
+          </div>
         </div>
       </div>
       <Copyright />

@@ -20,12 +20,12 @@ function AllComments({ allComments, setToogle }) {
         }
     }
     return (
-        <div className='mt-10 w-2/3 mb-5 ml-24  '>
+        <div className='mt-10 w-2/3 mb-5 sm:ml-24 ml-8 container  '>
             {allComments.map((comment) => (
                 <div className='mt-5 bg-zinc-100 p-2 rounded ml-8'>
-                    <div className='flex flex-row gap-3 mb-2 font-sans '>
+                    <div className='flex flex-row gap-3 mb-2 font-sans px-2 '>
                         <p className='font-bold text-xl font-sans'>{comment.name}   </p>
-                        <p className='ml-6 font-normal mt-1  text-sm text-gray-400'>{new Date(comment.date).toDateString()}</p>
+                        <p className='sm:ml-4 ml-1 md:ml-6 font-normal mt-1  text-sm text-gray-400'>{new Date(comment.date).toDateString()}</p>
                         <button
                             onClick={() => handleDelete(comment._id)}
                             className='ml-auto hover:scale-110 transition-all'>
@@ -34,7 +34,7 @@ function AllComments({ allComments, setToogle }) {
 
                     </div>
                     <div>
-                        <p className=' text-base font-normal font-sans'>{comment.comments}</p>
+                        <p className=' text-base font-normal font-sans px-2'>{comment.comments}</p>
                     </div>
 
                 </div>

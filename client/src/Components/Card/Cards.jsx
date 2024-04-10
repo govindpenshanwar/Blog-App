@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import axios from "axios";
 import {
-    Button,
     CardActionArea,
-    CardActions,
     CardContent,
     CardMedia,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import baseUrl from '../../utils/baseUrl'
+import toast from 'react-hot-toast'
 
-function Cards() {
+function Cards({ searchQuery }) {
     const [blogData, setBlogData] = useState([]);
+    const [filteredBlogs, setFilteredBlogs] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,17 +27,31 @@ function Cards() {
         };
         fetchData();
     }, []);
+
+    // const filteredBlogs = blogData.filter((blog => {
+    //     return blog.categories.includes(searchQuery);
+    // }))
+    useEffect(() => {
+        if (searchQuery.trim() !== "") {
+            const filtered = blogData.filter(blog =>
+                blog.categories.includes(searchQuery)
+            );
+            setFilteredBlogs(filtered);
+        } else {
+            setFilteredBlogs(blogData);
+        }
+    }, [searchQuery, blogData]);
+
     return (
         <>
-            {
-                blogData.map((blog) => (
+            {filteredBlogs.length > 0 ?
+                filteredBlogs.map((blog) => (
                     <div
                         key={blog._id}
-                        className="flex  flex-wrap gap-8 ml-14 mt-[4.5rem] mb-5  ">
+                        className=" mt-[1.2rem] mb-4   ">
                         <Link to={`/singleBlog/${blog._id}`}>
                             <Card
-
-                                className="h-[500px] overflow-y-scroll"
+                                className="h-[500px] overflow-y-scroll "
                                 sx={{ width: 345 }}
                             >
                                 <CardActionArea>
@@ -45,19 +59,16 @@ function Cards() {
                                         component="img"
                                         height="140px"
                                         className="w-full h-64"
-                                        // image={blog}
                                         image={blog.picture}
                                         alt="blog image"
                                     />
 
                                     <CardContent>
                                         <p className="text-xl font-bold ">
-                                            {/* My Blog */}
                                             {blog.title}
                                         </p>
                                         <div className="h-36 overflow-y-auto">
                                             <p className="text-base font-normal">
-                                                {/* Lorem, ipsum dolor sit amet consectetur adipisicing elit. Similique alias asperiores sint ipsum neque aperiam quas temporibus accusantium libero error sit itaque enim laborum, provident rem soluta corrupti sequi consectetur? */}
                                                 {blog.description}
                                             </p>
                                         </div>
@@ -69,7 +80,12 @@ function Cards() {
 
                     </div>
                 ))
+                :
+                <div className=" flex items-center">
+                    <h1 className=" text-xl text-center  font-bold">No Posts found...</h1>
+                </div>
             }
+
         </>
     );
 }
