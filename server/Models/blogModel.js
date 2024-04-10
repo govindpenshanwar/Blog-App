@@ -9,6 +9,6 @@ const blogSchema = new mongoose.Schema({
     createdDate: { type: Date }
 });
 
-const blog = mongoose.models.blog || mongoose.model('blog', blogSchema);
+const blog = mongoose.models.blogs || mongoose.model('blog', blogSchema);
 
 module.exports = blog;

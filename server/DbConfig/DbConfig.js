@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
-
- async function connect(){
+require('dotenv').config();
+async function connect() {
     try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/BloggerDB').then(() => {
+        const mongoUri = process.env.MONGO_URI
+        // 'mongodb://127.0.0.1:27017/BloggerDB'
+        await mongoose.connect(mongoUri).then(() => {
             console.log("Db Connected");
         }).catch((err) => {
             console.error("Err connecting DB");
@@ -12,4 +14,4 @@ const mongoose = require('mongoose');
     }
 }
 
-module.exports =  connect;
+module.exports = connect;
