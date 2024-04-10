@@ -94,8 +94,9 @@ function SignUp() {
 
           <TextField
             variant='outlined'
-            label='ConfirmPassword'
+            label='Password'
             color='primary'
+            type='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="sm:w-96 w-80"

@@ -87,6 +87,7 @@ function Login({ setIsAuthenticated }) {
           <TextField
             variant="outlined"
             label="Password*"
+            type="password"
             color="primary"
             value={password}
             className="sm:w-96 w-80"
