@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import toast from 'react-hot-toast'
 import getAuthToken from '../../../utils/authToken';
 import baseUrl from '../../../utils/baseUrl'
+import { UserContext } from '../../Context/UserContext';
 
 function AllComments({ allComments, setToogle }) {
-    const username = getAuthToken();
+    // const username = getAuthToken();
+    const { username } = useContext(UserContext);
     const handleDelete = async (commentId) => {
         try {
             const api = await axios.delete(`${baseUrl}/deleteComment/${commentId}`, { withCredentials: true });

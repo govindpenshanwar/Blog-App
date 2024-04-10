@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import getAuthToken from '../../../utils/authToken';
 import PersonIcon from '@mui/icons-material/Person';
-import { TextareaAutosize, TextField, InputAdornment } from '@mui/material';
+import { TextField, InputAdornment } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import axios from 'axios';
 import AllComments from './AllComments';
 import toast from 'react-hot-toast';
 import baseUrl from '../../../utils/baseUrl';
+import { UserContext } from '../../Context/UserContext';
 
 
 const initialValues = {
@@ -16,7 +17,8 @@ const initialValues = {
     date: new Date()
 }
 function Comments({ blog }) {
-    const username = getAuthToken();
+    // const username = getAuthToken();
+    const { username } = useContext(UserContext)
     const [comment, setComment] = useState(initialValues);
     const [allComments, setAllComments] = useState([]);
     const [toogle, setToogle] = useState(false);

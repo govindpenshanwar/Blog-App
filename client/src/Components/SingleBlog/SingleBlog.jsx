@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Comments from "./Comments/Comments";
@@ -7,12 +7,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import getAuthToken from "../../utils/authToken";
 import toast from "react-hot-toast";
 import baseUrl from '../../utils/baseUrl'
+import { UserContext } from "../Context/UserContext";
 
 function SingleBlog() {
   const { id } = useParams();
   const [blog, setBlog] = useState(null);
 
-  const username = getAuthToken();
+  // const username = getAuthToken();
+  const { username } = useContext(UserContext);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchBlog = async () => {

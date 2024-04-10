@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 import baseUrl from "../../utils/baseUrl";
 import Divider from "@mui/material/Divider";
 import { Avatar } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
 import user from '../Assets/user.png'
 import {
   Menu,
@@ -17,7 +16,6 @@ import {
 } from "@mui/material";
 import Logout from "@mui/icons-material/Logout";
 import { UserContext } from "../Context/UserContext";
-import logo from '../Assets/bgLogo.png'
 // import getAuthToken from '../../utils/authToken';
 
 function Header() {
@@ -58,9 +56,9 @@ function Header() {
           >
             My Blogs
           </Link>
-          <Link className=" hover:text-rose-500 ease-out 1s" to="/Contact">
+          {/* <Link className=" hover:text-rose-500 ease-out 1s" to="/Contact">
             Contact
-          </Link>
+          </Link> */}
           <div>
             <Tooltip title="Account">
               <IconButton
