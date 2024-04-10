@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import axios from "axios";
 import error from '../Assets/error.jpg'
 import {
-    Button,
     CardActionArea,
-    CardActions,
     CardContent,
     CardMedia,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import baseUrl from '../../utils/baseUrl'
-import getAuthToken from "../../utils/authToken";
+// import getAuthToken from "../../utils/authToken";
+import { UserContext } from "../Context/UserContext";
 
 function MyBlogs() {
     const [blogData, setBlogData] = useState([]);
-    const username = getAuthToken();
+    // const username = getAuthToken();
+    const { username } = useContext(UserContext);
 
     useEffect(() => {
         const fetchData = async () => {
