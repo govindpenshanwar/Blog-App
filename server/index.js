@@ -27,7 +27,7 @@ app.use(
         origin: "https://blog-app-mu-vert.vercel.app",
         methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type"],
-        credentials: true,
+        credentials: true
     })
 );
 
@@ -122,8 +122,6 @@ app.post("/loginData", async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: false,
-            sameSite: "None",
-            secure: true,
         });
         return res.status(200).json({
             message: "Login Successfull",
