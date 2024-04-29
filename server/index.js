@@ -21,7 +21,7 @@ require("dotenv").config();
 
 app.use(
     cors({
-        // origin: "http://localhost:3000", 
+        // origin: "http://localhost:3000",
         origin: "https://blog-app-mu-vert.vercel.app",
         methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type"],
@@ -98,7 +98,6 @@ app.post("/loginData", async (req, res) => {
     const { username, password } = req.body;
     try {
         console.log("Username => ", username);
-        console.log("Password => ", password);
 
         const user = await User.findOne({ username });
         const validPassword = await bcryptjs.compare(password, user.password);
@@ -123,6 +122,7 @@ app.post("/loginData", async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: false,
+            expires: "1d"
         });
         return res.status(200).json({
             message: "Login Successfull",
@@ -189,42 +189,6 @@ app.post("/signUpData", async (req, res) => {
     }
 });
 
-// app.post("/blogData", async (req, res) => {
-//     try {
-//         const { title, description } = req.body;
-//         const { picture } = req.files;
-
-//         const decodedToken = jwt.verify(req.cookies.token, 'Shhh');
-//         const { username } = decodedToken;
-
-//         const createdDate = new Date();
-
-//         const picturePath = `/Uploads/${picture.name}`;
-//         picture.mv(`.${picturePath}`);
-
-//         const newBlog = new Blog({
-//             title,
-//             username: username,
-//             description,
-//             picture: picturePath,
-//             createdDate,
-//         });
-
-//         await newBlog.save();
-//         res.json({
-//             message: "Blog Added Successfully",
-//             title,
-//             description,
-//             createdDate,
-//             picture,
-//             username
-//         }).status(200);
-
-//     } catch (error) {
-//         console.error("Err at blogData route => ", error.message);
-//     }
-// });
-
 app.post("/blogData", upload, async (req, res) => {
     try {
         const { title, description, categories } = req.body;
@@ -233,44 +197,6 @@ app.post("/blogData", upload, async (req, res) => {
         if (!picture) {
             return res.status(400).json({ error: "No picture uploaded" });
         }
-
-        // // Creating a unique filename for the temporary file
-        // const tempFileName = uuidv4();
-        // const tempFilePath = path.join(__dirname, `/public/temp/${tempFileName}`);
-
-        // // Writing the buffer data to the temporary file
-        // await fs.writeFile(tempFilePath, picture.buffer);
-
-        // const result = await cloudinary.uploader.upload(tempFilePath, {
-        //     resource_type: "auto"
-        // });
-
-        // await fs.unlink(tempFilePath);
-        // const cloudinaryUrl = result.url;
-
-        // const decodedToken = jwt.verify(req.cookies.token, 'Shhh');
-        // const { username } = decodedToken;
-
-        // const createdDate = new Date();
-
-        // const newBlog = new Blog({
-        //     title,
-        //     username,
-        //     description,
-        //     picture: cloudinaryUrl,
-        //     createdDate,
-        // });
-
-        // await newBlog.save();
-
-        // res.status(200).json({
-        //     message: 'Blog Added Successfully',
-        //     title,
-        //     description,
-        //     picture: cloudinaryUrl,
-        //     createdDate,
-        //     username
-        // });
 
         const result = await cloudinary.uploader
             .upload_stream(
