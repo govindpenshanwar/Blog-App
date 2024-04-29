@@ -122,7 +122,6 @@ app.post("/loginData", async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
             sameSite: "None",
             secure: true,
         });
