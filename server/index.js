@@ -115,7 +115,7 @@ app.post("/loginData", async (req, res) => {
             username: user.username,
         };
 
-        const tokenSecret = "Shhh";
+        const tokenSecret = process.env.tokenSecret;
         const token = await jwt.sign(tokenData, tokenSecret, {
             expiresIn: "1d",
         });
