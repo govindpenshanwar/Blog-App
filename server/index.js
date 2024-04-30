@@ -33,7 +33,6 @@ app.use(
 
 app.use(express.json({ limit: "40mb" }));
 app.use(bodyParser.urlencoded({ limit: "40mb", extended: true }));
-// app.use("/Uploads", express.static(path.join(__dirname, "/Uploads")));
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -48,7 +47,6 @@ app.get("/", (req, res) => {
 app.get("/getData", async (req, res) => {
     try {
         const blog = await Blog.find();
-        // console.log("Blog Data => ", blog);
         res.send(blog);
     } catch (error) {
         console.error("Err at getting Data => ", error.message);
@@ -74,9 +72,8 @@ app.get("/getMyBlogs/:username", async (req, res) => {
 
 app.get("/getData/:id", async (req, res) => {
     try {
-        const id = req.params.id; // Extract the ID parameter from the request
-        const blog = await Blog.findById(id); // Find the blog post by its ID
-        // console.log("Blog Data => ", blog);
+        const id = req.params.id;
+        const blog = await Blog.findById(id);
         res.send(blog);
     } catch (error) {
         console.error("Error fetching blog data:", error.message);
@@ -85,9 +82,8 @@ app.get("/getData/:id", async (req, res) => {
 });
 app.get("/getData/:id", async (req, res) => {
     try {
-        const id = req.params.id; // Extract the ID parameter from the request
-        const blog = await Blog.findById(id); // Find the blog post by its ID
-        // console.log("Blog Data => ", blog);
+        const id = req.params.id;
+        const blog = await Blog.findById(id);
         res.send(blog);
     } catch (error) {
         console.error("Error fetching blog data:", error.message);
@@ -122,6 +118,8 @@ app.post("/loginData", async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: false,
+            sameSite: "none",
+            secure: true
         });
         return res.status(200).json({
             message: "Login Successfull",
@@ -135,7 +133,6 @@ app.post("/loginData", async (req, res) => {
 
 app.get("/logout", async (req, res) => {
     try {
-        // res.clearCookie('token',expiresIn = Date.now(0));
         res.cookie("token", "", {
             expires: new Date(0),
             httpOnly: true,
