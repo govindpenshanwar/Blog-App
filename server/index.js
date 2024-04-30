@@ -117,7 +117,7 @@ app.post("/loginData", async (req, res) => {
         });
 
         res.cookie("token", token, {
-            httpOnly: false,
+            httpOnly: true,
             sameSite: "none",
         });
         return res.status(200).json({
