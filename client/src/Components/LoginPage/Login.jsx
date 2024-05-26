@@ -31,7 +31,7 @@ function Login({ setIsAuthenticated }) {
           { withCredentials: true }
         );
         const res = API.data;
-        console.log(res);
+        // console.log(res);
         setIsAuthenticated(true);
         login(username);
         toast.success("Logged in Successfully !!");

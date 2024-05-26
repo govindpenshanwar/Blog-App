@@ -28,7 +28,7 @@ function SignUp() {
       try {
         const API = await axios.post(`${baseUrl}/signUpData`, { username, email, password });
         const res = API.data;
-        console.log(res);
+        // console.log(res);
       } catch (error) {
         console.error("Error is:", error);
       }

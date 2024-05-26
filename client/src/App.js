@@ -1,76 +1,3 @@
-// import React, { useState } from "react";
-// import Layout from "./Layout/Layout";
-// import Login from "./Components/LoginPage/Login";
-// import { Navigate, Outlet, Route, Routes } from "react-router-dom";
-// import SignUp from "./Components/SignUpPage/SignUp";
-// import Header from "./Components/Header/Header";
-// import Home from "./Components/Home/Home";
-// import CreatePost from "./Components/CreatePost/CreatePost";
-// import DataProvider from "./Components/Context/DataProvider";
-// import ImageUpload from "./Components/ImageUpload";
-// import SingleBlog from "./Components/SingleBlog/SingleBlog";
-// import { Toaster } from 'react-hot-toast';
-// import Update from "./Components/UpdateBlog/Update";
-
-// const PrivateRoute = ({ isAuthenticated, ...props }) => {
-//   return isAuthenticated ? (
-//     <>
-//       <Header />
-//       <Outlet />
-//     </>
-//   ) : (
-//     <Navigate replace to="/login" />
-//   );
-// };
-
-// function App() {
-//   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-//   return (
-//     <>
-//       <Toaster
-//         toastOptions={{
-//           style: {
-//             background: 'rgb(51,65,85)',
-//             color: 'white'
-//           }
-//         }} />
-//       <DataProvider>
-
-//         <div>
-//           <Routes>
-//             <Route path="/" element={<Layout />} />
-//             <Route
-//               path="/login"
-//               element={<Login setIsAuthenticated={setIsAuthenticated} />}
-//             />
-//             <Route path="/signUp" element={<SignUp />} />
-
-//             <Route
-//               path="/"
-//               element={<PrivateRoute isAuthenticated={isAuthenticated} />}
-//             >
-//               <Route path="/home" element={<Home />} />
-//               <Route path="/singleBlog/:id" element={<SingleBlog />} />
-//             </Route>
-//             <Route path="/upload" element={<ImageUpload />} />
-
-//             <Route
-//               path="/createPost"
-//               element={<PrivateRoute isAuthenticated={isAuthenticated} />}
-//             >
-//               <Route path="/createPost" element={<CreatePost />} />
-//             </Route>
-
-//             <Route path="/updatePost/:id" element={<Update />} />
-//           </Routes>
-//         </div>
-//       </DataProvider>
-//     </>
-//   );
-// }
-
-// export default App;
 import React, { useState, lazy, Suspense } from "react";
 import Layout from "./Layout/Layout";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
@@ -185,6 +112,7 @@ function App() {
               element={
                 <Suspense fallback={<div className="text-xl font-bold text-center  mt-4">Loading...</div>}>
                   <Update />
+                  <PrivateRoute isAuthenticated={isAuthenticated} />
                 </Suspense>
               }
             />

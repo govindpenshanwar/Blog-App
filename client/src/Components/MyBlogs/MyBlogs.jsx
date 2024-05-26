@@ -45,8 +45,9 @@ function MyBlogs() {
 
                     {(blogData.map((blog) => (
                         <Link to={`/singleBlog/${blog._id}`}>
-                            <div key={blog._id}>
+                            <div >
                                 <Card
+                                    key={blog._id}
                                     className="h-[500px] overflow-y-scroll"
                                     sx={{ width: 345 }}
                                 >
@@ -65,7 +66,7 @@ function MyBlogs() {
                                                 {blog.title}
                                             </p>
                                             <div className="h-36 overflow-y-scroll">
-                                                <p className="text-base font-normal">
+                                                <p className="text-base font-normal md:line-clamp-3 line-clamp-4">
                                                     {blog.description}
                                                 </p>
                                             </div>

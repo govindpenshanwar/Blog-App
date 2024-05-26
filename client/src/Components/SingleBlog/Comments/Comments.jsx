@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import getAuthToken from '../../../utils/authToken';
 import PersonIcon from '@mui/icons-material/Person';
 import { TextField, InputAdornment } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
@@ -17,7 +16,6 @@ const initialValues = {
     date: new Date()
 }
 function Comments({ blog }) {
-    // const username = getAuthToken();
     const { username } = useContext(UserContext)
     const [comment, setComment] = useState(initialValues);
     const [allComments, setAllComments] = useState([]);
@@ -61,16 +59,9 @@ function Comments({ blog }) {
         fetchData();
     }, [blog._id, toogle])
     return (
-        <div className=' md:ml-40 ml-0 items-center justify-center mb-5    '>
-            <div className='flex flex-row mt-32  sm:ml-28 ml-16  w-2/3 items-center justify-center gap-1'>
-                {/* <TextareaAutosize
-                    minRows={5}
-                    placeholder="What's on your mind ?"
-                    value={comment.comments}
-                    onChange={(e) => handleChange(e)}
-                    className='rounded-lg outline-zinc-200'
-                    style={{ width: '100%', height: '55px', padding: '12px 10px' }}
-                /> */}
+        <div className=' flex flex-col items-center justify-center mb-5    '>
+            <div className='flex flex-row mt-32    w-2/3 items-center justify-center gap-1'>
+
                 <TextField
                     placeholder="What's on your mind ?"
                     value={comment.comments}

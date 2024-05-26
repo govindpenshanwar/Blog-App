@@ -1,23 +1,21 @@
 import React, { useState } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { Tooltip, InputBase, Button, TextareaAutosize } from "@mui/material";
+import { Tooltip, InputBase, Button, TextareaAutosize, Select, MenuItem } from "@mui/material";
 import SendSharpIcon from "@mui/icons-material/SendSharp";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import baseUrl from '../../utils/baseUrl'
-
+import { categories } from '../Constants/data.js'
 
 function CreatePost() {
-  const [searchParams] = useSearchParams();
-  const category = searchParams.get('category');
 
   const navigate = useNavigate();
   const [post, setPost] = useState({
     title: "",
     description: "",
     // username: "",
-    categories: category,
+    categories: "",
     picture: null,
     createdDate: new Date(),
   });
@@ -51,9 +49,10 @@ function CreatePost() {
   const blogImage = require("../Assets/blog4.jpg");
 
   return (
-    <div className=" mx-12 mt-1">
+    <div className=" mx-12 mt-16">
       <img
-        style={{ width: "100%", height: "68vh", objectFit: "cover" }}
+        // style={{ width: "100%", height: "68vh", objectFit: "cover" }}
+        className="sm:w-full max-h-[55vh] object-cover"
         // src={require("../Assets/blog4.jpg")}
         src={blogImage}
         alt="Blog img"
@@ -71,7 +70,9 @@ function CreatePost() {
         style={{ display: "none" }}
       />
 
-      <div className="mt-4 flex">
+
+
+      <div className="mt-8 p-2 flex sm:flex-row flex-col sm:gap-6 gap-5 items-center justify-center">
         <label htmlFor="FileInput">
           <Tooltip title="Add File" placement="bottom-start">
             <AddCircleIcon style={{ marginTop: "10px" }} fontSize="medium" />
@@ -79,7 +80,8 @@ function CreatePost() {
         </label>
 
         <InputBase
-          style={{ margin: "0 30px", fontSize: "25px", width: "88%" }}
+          style={{ fontSize: "20px", }}
+          className="ring-offset-2 ring-1 focus-within:ring-zinc-800 focus:ring-4 ring-gray-300  sm:w-[50%] w-full rounded    p-2 "
           placeholder="Title"
           name="title"
           value={post.title}
@@ -90,17 +92,38 @@ function CreatePost() {
             })
           }
         />
+        <Select
+          value={post.categories}
+          displayEmpty
+          onChange={(e) => {
+            setPost({ ...post, categories: e.target.value })
+            console.log(e.target.value)
+          }}
+          renderValue={(selected) => {
+            if (selected.length === 0) {
+              return <em>Select a Category</em>;
+            }
+            return selected;
+          }}
+        >
+          {categories.map((category) => (
+            <MenuItem key={category.id} value={category.type}>
+              {category.type}
+            </MenuItem>
+          ))}
+        </Select>
 
         <Button
           variant="contained"
           size="large"
           endIcon={<SendSharpIcon />}
-          style={{ paddingLeft: "20px" }}
+          style={{ paddingLeft: "20px", marginLeft: "10px" }}
           onClick={handleChange}
         >
           Publish
         </Button>
       </div>
+
 
       <TextareaAutosize
         minRows={6}

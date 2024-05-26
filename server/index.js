@@ -24,7 +24,7 @@ app.use(coookieParser());
 app.use(
     cors({
         // origin: "http://localhost:3000",
-        origin: "https://blog-app-mu-vert.vercel.app",
+        origin: ["https://blog-app-mu-vert.vercel.app", "http://localhost:3000"],
         methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type"],
         credentials: true

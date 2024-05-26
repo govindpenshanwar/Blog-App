@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { Tooltip, InputBase, Button, TextareaAutosize } from "@mui/material";
+import { Tooltip, InputBase, Button, TextareaAutosize, Select, MenuItem } from "@mui/material";
 import SendSharpIcon from "@mui/icons-material/SendSharp";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import baseUrl from "../../utils/baseUrl.js";
+import { categories } from "../Constants/data.js";
 
 function Update() {
     const navigate = useNavigate();
@@ -61,36 +62,45 @@ function Update() {
         : post.picture;
 
     return (
-        <div className=" mx-12 mt-1">
+        <div
+            className=" mx-12 mt-16"
+        // className=" mx-12 mt-1"
+        >
             <img
-                style={{ width: "100%", height: "68vh", objectFit: "cover" }}
+                // style={{ width: "100%", height: "68vh", objectFit: "cover" }}
                 // src={require("../Assets/blog4.jpg")}
+                className="sm:w-full max-h-[55vh] object-cover"
                 src={blogImage}
                 alt="Blog img"
             />
+            <input
+                type="file"
+                id="FileInput"
+                name="picture"
+                onChange={(e) =>
+                    setPost({
+                        ...post,
+                        picture: e.target.files[0],
+                    })
+                }
+                style={{ display: "none" }}
+            />
 
-            <div className="mt-4 flex">
+            <div
+                className="mt-8 p-2 flex sm:flex-row flex-col sm:gap-6 gap-5 items-center justify-center"
+            // className="mt-4 flex"
+            >
                 <label htmlFor="FileInput">
                     <Tooltip title="Add File" placement="bottom-start">
                         <AddCircleIcon style={{ marginTop: "10px" }} fontSize="medium" />
                     </Tooltip>
                 </label>
-                <input
-                    type="file"
-                    id="FileInput"
-                    name="picture"
-                    onChange={(e) =>
-                        setPost({
-                            ...post,
-                            picture: e.target.files[0],
-                        })
-                    }
-                    style={{ display: "none" }}
-                />
+
 
                 <InputBase
-                    style={{ margin: "0 30px", fontSize: "25px", width: "88%" }}
+                    style={{ fontSize: "20px", }}
                     placeholder="Title"
+                    className="ring-offset-2 ring-1 focus-within:ring-zinc-800 focus:ring-4 ring-gray-300  sm:w-[50%] w-full rounded    p-2 "
                     name="title"
                     value={post.title}
                     onChange={(e) =>
@@ -101,11 +111,32 @@ function Update() {
                     }
                 />
 
+                <Select
+                    value={post.categories}
+                    displayEmpty
+                    onChange={(e) => {
+                        setPost({ ...post, categories: e.target.value })
+                        console.log(e.target.value)
+                    }}
+                    renderValue={(selected) => {
+                        if (selected.length === 0) {
+                            return <em>Select a Category</em>;
+                        }
+                        return selected;
+                    }}
+                >
+                    {categories.map((category) => (
+                        <MenuItem key={category.id} value={category.type}>
+                            {category.type}
+                        </MenuItem>
+                    ))}
+                </Select>
+
                 <Button
                     variant="contained"
                     size="large"
                     endIcon={<SendSharpIcon />}
-                    style={{ paddingLeft: "20px" }}
+                    style={{ paddingLeft: "20px", marginLeft: "10px" }}
                     onClick={handleChange}
                 >
                     Update
@@ -123,6 +154,7 @@ function Update() {
                     border: "none",
                     outlineStyle: "none",
                 }}
+                className="text-justify mb-8"
                 value={post.description}
                 onChange={(e) =>
                     setPost({

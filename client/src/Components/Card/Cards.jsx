@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import baseUrl from '../../utils/baseUrl'
-import toast from 'react-hot-toast'
 
 function Cards({ searchQuery }) {
     const [blogData, setBlogData] = useState([]);
@@ -20,7 +19,7 @@ function Cards({ searchQuery }) {
                 const API = await axios.get(`${baseUrl}/getData`, { withCredentials: true });
                 const response = API.data;
                 setBlogData(response);
-                console.log("Blog => ", response);
+                // console.log("Blog => ", response);
             } catch (error) {
                 console.error("Err at fetching Data => ", error.message);
             }
@@ -28,9 +27,6 @@ function Cards({ searchQuery }) {
         fetchData();
     }, []);
 
-    // const filteredBlogs = blogData.filter((blog => {
-    //     return blog.categories.includes(searchQuery);
-    // }))
     useEffect(() => {
         if (searchQuery.trim() !== "") {
             const filtered = blogData.filter(blog =>
@@ -51,8 +47,8 @@ function Cards({ searchQuery }) {
                         className=" mt-[1.2rem] mb-4   ">
                         <Link to={`/singleBlog/${blog._id}`}>
                             <Card
-                                className="h-[500px] overflow-y-scroll "
-                                sx={{ width: 345 }}
+                                className="h-[53vh] "
+                                sx={{ width: 350 }}
                             >
                                 <CardActionArea>
                                     <CardMedia
@@ -63,15 +59,17 @@ function Cards({ searchQuery }) {
                                         alt="blog image"
                                     />
 
-                                    <CardContent>
-                                        <p className="text-xl font-bold ">
+                                    <CardContent
+                                        className="flex flex-col gap-3 "
+                                    >
+                                        <p className="text-lg font-bold ">
                                             {blog.title}
                                         </p>
-                                        <div className="h-36 overflow-y-auto">
-                                            <p className="text-base font-normal">
-                                                {blog.description}
-                                            </p>
-                                        </div>
+
+                                        <p className="text-base font-normal md:line-clamp-3 line-clamp-4">
+                                            {blog.description}
+                                        </p>
+
                                     </CardContent>
                                 </CardActionArea>
 

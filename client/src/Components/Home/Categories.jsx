@@ -1,17 +1,20 @@
 import React from 'react'
 import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
-import { categories } from '../Constants/data'
+// import { categories } from '../Constants/data'
 import { Link, useSearchParams } from 'react-router-dom';
 
 function Categories() {
-    const [searchParam] = useSearchParams();
-    const category = searchParam.get('category')
+    // const [searchParam] = useSearchParams();
+    // const category = searchParam.get('category')
 
 
     return (
         <div className='md:max-w-max sm:max-w-max max-w-max '>
             <div className='flex flex-col'>
-                <Link to={`/createPost?category=${category || ''}`}>
+                <Link
+                    to={'/createPost'}
+                // to={`/createPost?category=${category || ''}`}
+                >
                     <Button
                         variant='contained'
                         color='error'
@@ -22,7 +25,7 @@ function Categories() {
                     </Button>
                 </Link>
 
-                <Table className='grid col-span-2'
+                {/* <Table className='grid col-span-2'
                     style={{ border: '1px solid rgba(224,224,224,1)', marginTop: '10px', marginLeft: '15px' }}
                 >
                     <TableHead>
@@ -47,7 +50,7 @@ function Categories() {
                             ))
                         }
                     </TableBody>
-                </Table>
+                </Table> */}
             </div>
         </div>
     )
