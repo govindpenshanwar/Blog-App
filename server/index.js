@@ -124,7 +124,7 @@ app.post("/loginData", async (req, res) => {
         return res.status(200).json({
             message: "Login Successfull",
             success: true,
-            token,
+            token
         });
     } catch (error) {
         console.error("Err at login Route => ", error.message);

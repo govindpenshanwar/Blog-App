@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense, Children } from "react";
 import Layout from "./Layout/Layout";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { Toaster } from 'react-hot-toast';
@@ -17,7 +17,9 @@ const SingleBlog = lazy(() => import("./Components/SingleBlog/SingleBlog"));
 const Update = lazy(() => import("./Components/UpdateBlog/Update"));
 const Contact = lazy(() => import("./Components/Contact/Contact"))
 
-const PrivateRoute = ({ isAuthenticated, ...props }) => {
+
+const PrivateRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem('token')
   return isAuthenticated ? (
     <>
       <Header />
@@ -27,7 +29,6 @@ const PrivateRoute = ({ isAuthenticated, ...props }) => {
     <Navigate replace to="/login" />
   );
 };
-
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 

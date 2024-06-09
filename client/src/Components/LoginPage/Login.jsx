@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 import baseUrl from "../../utils/baseUrl";
 import { UserContext } from "../Context/UserContext";
 
-function Login({ setIsAuthenticated }) {
+function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -32,10 +32,10 @@ function Login({ setIsAuthenticated }) {
         );
         const res = API.data;
         // console.log(res);
-        setIsAuthenticated(true);
         login(username);
         toast.success("Logged in Successfully !!");
         navigate("/home");
+        localStorage.setItem("token", res.token)
       } catch (error) {
         console.error("Error at login page => ", error);
       }

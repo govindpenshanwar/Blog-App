@@ -35,6 +35,7 @@ function Header() {
     try {
       await axios.get(`${baseUrl}/logout`, { withCredentials: true });
       toast.success("Logged Out Successfully !!");
+      localStorage.removeItem("token")
       navigate("/login");
     } catch (error) {
       console.error("Err at handleLogout func => ", error.message);
