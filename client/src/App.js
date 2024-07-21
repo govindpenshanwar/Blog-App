@@ -1,10 +1,13 @@
-import React, { useState, lazy, Suspense, Children } from "react";
-import Layout from "./Layout/Layout";
+import React, { lazy, Suspense } from "react";
+// import Layout from "./Layout/Layout";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 import MyBlogs from "./Components/MyBlogs/MyBlogs";
 import { UserProvider } from "./Components/Context/UserContext";
-
+import AuthHandler from "./utils/AuthHandler";
+import UserProfilePage from "./Components/UserProfile/UserProfilePage";
+import Loading from "./utils/Loading";
+import AdminPanelPage from "./Components/AdminPanel/AdminPanelPage";
 
 // Lazy load components
 const Login = lazy(() => import("./Components/LoginPage/Login"));
@@ -15,11 +18,10 @@ const CreatePost = lazy(() => import("./Components/CreatePost/CreatePost"));
 const ImageUpload = lazy(() => import("./Components/ImageUpload"));
 const SingleBlog = lazy(() => import("./Components/SingleBlog/SingleBlog"));
 const Update = lazy(() => import("./Components/UpdateBlog/Update"));
-const Contact = lazy(() => import("./Components/Contact/Contact"))
+const Contact = lazy(() => import("./Components/Contact/Contact"));
 
-
-const PrivateRoute = ({ children }) => {
-  const isAuthenticated = localStorage.getItem('token')
+const PrivateRoute = () => {
+  const isAuthenticated = localStorage.getItem("crsftoken");
   return isAuthenticated ? (
     <>
       <Header />
@@ -30,17 +32,17 @@ const PrivateRoute = ({ children }) => {
   );
 };
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   return (
     <>
       <Toaster
         toastOptions={{
           style: {
-            background: 'rgb(51,65,85)',
-            color: 'white'
-          }
-        }} />
+            background: "rgb(51,65,85)",
+            color: "white",
+          },
+        }}
+      />
+
       <UserProvider>
         <div>
           <Routes>
@@ -48,15 +50,23 @@ function App() {
             <Route
               path="/login"
               element={
-                <Suspense fallback={<div className="text-xl font-bold text-center mt-4">Loading...</div>}>
-                  <Login setIsAuthenticated={setIsAuthenticated} />
+                <Suspense
+                  fallback={
+                    <Loading />
+                  }
+                >
+                  <Login />
                 </Suspense>
               }
             />
             <Route
               path="/signUp"
               element={
-                <Suspense fallback={<div className="text-xl font-bold text-center mt-4">Loading...</div>}>
+                <Suspense
+                  fallback={
+                    <Loading />
+                  }
+                >
                   <SignUp />
                 </Suspense>
               }
@@ -64,8 +74,8 @@ function App() {
             <Route
               path="/"
               element={
-                <Suspense fallback={<div className="text-xl font-bold text-center mt-4">Loading...</div>}>
-                  <PrivateRoute isAuthenticated={isAuthenticated} />
+                <Suspense fallback={<Loading />}>
+                  <PrivateRoute />
                 </Suspense>
               }
             >
@@ -75,7 +85,7 @@ function App() {
             <Route
               path="/upload"
               element={
-                <Suspense fallback={<div className="text-xl font-bold text-center mt-4">Loading...</div>}>
+                <Suspense fallback={<Loading />}>
                   <ImageUpload />
                 </Suspense>
               }
@@ -83,7 +93,7 @@ function App() {
             <Route
               path="/Contact"
               element={
-                <Suspense fallback={<div className="text-xl font-bold text-center mt-4">Loading...</div>}>
+                <Suspense fallback={<Loading />}>
                   <Contact />
                 </Suspense>
               }
@@ -91,8 +101,8 @@ function App() {
             <Route
               path="/createPost"
               element={
-                <Suspense fallback={<div className="text-xl font-bold text-center mt-4">Loading...</div>}>
-                  <PrivateRoute isAuthenticated={isAuthenticated} />
+                <Suspense fallback={<Loading />}>
+                  <PrivateRoute />
                 </Suspense>
               }
             >
@@ -101,8 +111,8 @@ function App() {
             <Route
               path="/MyBlogs/:id"
               element={
-                <Suspense fallback={<div className="text-xl font-bold text-center mt-4">Loading...</div>}>
-                  <PrivateRoute isAuthenticated={isAuthenticated} />
+                <Suspense fallback={<Loading />}>
+                  <PrivateRoute />
                 </Suspense>
               }
             >
@@ -111,9 +121,28 @@ function App() {
             <Route
               path="/updatePost/:id"
               element={
-                <Suspense fallback={<div className="text-xl font-bold text-center  mt-4">Loading...</div>}>
+                <Suspense fallback={<Loading />}>
                   <Update />
-                  <PrivateRoute isAuthenticated={isAuthenticated} />
+                  <PrivateRoute />
+                </Suspense>
+              }
+            />
+            <Route path="/auth-handler" element={<AuthHandler />} />
+            <Route
+              path="/profile"
+              element={
+                <Suspense fallback={<Loading />}>
+                  <UserProfilePage />
+                  <PrivateRoute />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/admin-panel"
+              element={
+                <Suspense fallback={<Loading />}>
+                  <AdminPanelPage />
+                  <PrivateRoute />
                 </Suspense>
               }
             />

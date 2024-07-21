@@ -12,12 +12,16 @@ import { deepPurple } from '@mui/material/colors';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Copyright from '../Footer/Copyright';
 import baseUrl from '../../utils/baseUrl'
-import toast from 'react-hot-toast'
+import toast from 'react-hot-toast';
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 
 function SignUp() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -26,8 +30,7 @@ function SignUp() {
       toast.error("Please Enter Credentials")
     } else {
       try {
-        const API = await axios.post(`${baseUrl}/signUpData`, { username, email, password });
-        const res = API.data;
+        const API = await axios.post(`${baseUrl}/signUpData`, { username, email, password })
         // console.log(res);
       } catch (error) {
         console.error("Error is:", error);
@@ -64,6 +67,7 @@ function SignUp() {
             label='Username'
             color='primary'
             value={username}
+            required
             className="sm:w-96 w-80"
             onChange={(e) => setUsername(e.target.value)}
             name='username'
@@ -80,13 +84,15 @@ function SignUp() {
             label='Email'
             color='primary'
             value={email}
+            type='email'
+            required
             className="sm:w-96 w-80"
             onChange={(e) => setEmail(e.target.value)}
-            name='password'
+            name='email'
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <PasswordSharpIcon />
+                  <EmailOutlinedIcon />
                 </InputAdornment>
               ),
             }}
@@ -96,15 +102,24 @@ function SignUp() {
             variant='outlined'
             label='Password'
             color='primary'
-            type='password'
+            required
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="sm:w-96 w-80"
-            name='confirmPassword'
+            name='Password'
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start">
-                  <PasswordSharpIcon />
+                <InputAdornment
+                  position="start"
+                  className="cursor-pointer"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? (
+                    <VisibilityOffOutlinedIcon />
+                  ) : (
+                    <VisibilityOutlinedIcon />
+                  )}
                 </InputAdornment>
               ),
             }}

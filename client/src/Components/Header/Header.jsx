@@ -1,29 +1,40 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AppBar } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import baseUrl from "../../utils/baseUrl";
 import Divider from "@mui/material/Divider";
-import { Avatar } from "@mui/material";
-import user from '../Assets/user.png'
 import {
   Menu,
   MenuItem,
   IconButton,
   ListItemIcon,
-  Tooltip,
+  Tooltip
 } from "@mui/material";
+import PersonSharpIcon from '@mui/icons-material/PersonSharp';
 import Logout from "@mui/icons-material/Logout";
 import { UserContext } from "../Context/UserContext";
-// import getAuthToken from '../../utils/authToken';
+
 
 function Header() {
-  // const username = getAuthToken();
   const navigate = useNavigate();
-
   const [anchorEl, setAnchorEl] = useState(null);
+  const [userInfo, setUserInfo] = useState({});
   const open = Boolean(anchorEl);
+
+  useEffect(() => {
+    const fetchInfo = async () => {
+      try {
+        const res = await axios.get(`${baseUrl}/auth/user`, { withCredentials: true })
+        setUserInfo(res.data);
+        console.log("user info => ", res.data)
+      } catch (error) {
+        console.log("err fetching user info => ", error.message)
+      }
+    };
+    fetchInfo();
+  }, []);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -35,7 +46,7 @@ function Header() {
     try {
       await axios.get(`${baseUrl}/logout`, { withCredentials: true });
       toast.success("Logged Out Successfully !!");
-      localStorage.removeItem("token")
+      localStorage.removeItem("crsftoken")
       navigate("/login");
     } catch (error) {
       console.error("Err at handleLogout func => ", error.message);
@@ -57,23 +68,17 @@ function Header() {
           >
             My Blogs
           </Link>
-          {/* <Link className=" hover:text-rose-500 ease-out 1s" to="/Contact">
-            Contact
-          </Link> */}
+
           <div>
-            <Tooltip title="Account">
+            <Tooltip title="Profile">
               <IconButton
                 onClick={handleClick}
-                size="small"
+                size="medium"
                 aria-controls={open ? "account-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
               >
-                <Avatar sx={{ width: 32, height: 32 }}>
-                  {/* <PersonIcon /> */}
-                  <img src={user} alt="user img" />
-
-                </Avatar>
+                <PersonSharpIcon />
               </IconButton>
             </Tooltip>
             <Menu
@@ -113,7 +118,7 @@ function Header() {
             >
               <MenuItem onClick={handleClose}>
                 <span className="text-base font-semibold">
-                  Hello, {username} 👋
+                  Hello, {userInfo.given_name || username} 👋
                 </span>
               </MenuItem>
               <Divider component="li" />

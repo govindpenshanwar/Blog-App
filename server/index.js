@@ -9,36 +9,51 @@ const bcryptjs = require("bcryptjs");
 const Blog = require("./Models/blogModel");
 const path = require("path");
 const jwt = require("jsonwebtoken");
-// const authenticateToken = require("./middlewares/authToken");
 const coookieParser = require("cookie-parser");
 const commentsSchema = require("./Models/comments");
 const upload = require("./middlewares/multer");
 const cloudinary = require("cloudinary").v2;
-const { v4: uuidv4 } = require("uuid");
-const fs = require("fs").promises;
+const router = require("./routes/auth.routes");
+const passport = require("./middlewares/passport");
+const session = require("express-session");
+const userRouter = require("./routes/user.routes");
+const ApiError = require("./utils/ApiError");
+const { STATUS_CODES } = require("./utils/constants");
+const ApiResponse = require("./utils/ApiResponse");
+const asyncHandler = require("./utils/asyncHandler");
 
 require("dotenv").config();
 
 app.use(coookieParser());
+app.use(
+    session({
+        name: 'session',
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: true
+    })
 
+);
 app.use(
     cors({
-        // origin: "http://localhost:3000",
-        origin: ["https://blog-app-mu-vert.vercel.app", "http://localhost:3000"],
+        origin: ["https://blog-app-mu-vert.vercel.app"],
         methods: ["GET", "POST", "PUT", "DELETE"],
-        allowedHeaders: ["Content-Type"],
+        allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true
     })
 );
-
+app.use(passport.initialize());
+app.use(passport.session())
 app.use(express.json({ limit: "40mb" }));
 app.use(bodyParser.urlencoded({ limit: "40mb", extended: true }));
-
+app.use(router)
+app.use("/api/user", userRouter)
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
 
 app.get("/", (req, res) => {
     res.json("Hello World");
@@ -89,20 +104,21 @@ app.get("/getData/:id", async (req, res) => {
         console.error("Error fetching blog data:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
     }
-});
+}); ``
 
-app.post("/loginData", async (req, res) => {
+app.post("/loginData", asyncHandler(async (req, res) => {
     const { username, password } = req.body;
     try {
         console.log("Username => ", username);
+        console.log("pass => ", password)
 
         const user = await User.findOne({ username });
+        if (!user) {
+            return res.status(STATUS_CODES.NOT_FOUND).json(new ApiResponse(STATUS_CODES.BAD_REQUEST, "User Does not exists"))
+        }
         const validPassword = await bcryptjs.compare(password, user.password);
-        if (!user || !validPassword) {
-            res.status(404).json({
-                message: "User Doesn't Exists",
-                success: false,
-            })
+        if (!validPassword) {
+            return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json(new ApiResponse(STATUS_CODES.INTERNAL_SERVER_ERROR, "Invalid Password"))
 
         }
 
@@ -118,21 +134,23 @@ app.post("/loginData", async (req, res) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            sameSite: "none",
             secure: true
         });
-        return res.status(200).json({
-            message: "Login Successfull",
-            success: true,
-            token
-        });
-    } catch (error) {
-        console.error("Err at login Route => ", error.message);
-    }
-});
+        return res.status(STATUS_CODES.OK).json(new ApiResponse(STATUS_CODES.OK, "Login Successfull", {
+            token, role: user.username
+        }))
 
-app.get("/logout", async (req, res) => {
+
+    } catch (error) {
+        throw new ApiError(STATUS_CODES.INTERNAL_SERVER_ERROR, error.message)
+    }
+}));
+
+app.get("/logout", async (req, res, next) => {
     try {
+        req.logout((err) => {
+            return next(err)
+        });
         res.cookie("token", "", {
             expires: new Date(0),
             httpOnly: true,
@@ -334,7 +352,27 @@ app.delete("/deleteBlog/:id", async (req, res) => {
     }
 });
 
+
 connect();
+app.all("*", (req, res, next) => {
+    next(new ApiError(500, `can't find ${req.method} ${req.originalUrl} `));
+
+})
+
+app.use((err, req, res, next) => {
+    if (err instanceof ApiError) {
+        res.status(err.statusCode).json({
+            success: err.success,
+            message: err.message
+        });
+    } else {
+        res.status(500).json({
+            success: false,
+            message: 'Something went wrong',
+        });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server running on port http://localhost:${port}`);
 });
