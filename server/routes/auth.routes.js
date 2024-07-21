@@ -1,5 +1,6 @@
 const express = require('express');
 const passport = require('../middlewares/passport');
+
 require("dotenv").config();
 const jwt = require('jsonwebtoken')
 const router = express.Router();
@@ -9,8 +10,8 @@ router.get('/auth/google', passport.authenticate('google', { scope: ["email", "p
 router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }),
     async (req, res) => {
         const jwtpayload = {
-            username: req.user._json.given_name,
-            email: req.user._json.email
+            username: req.user.username,
+            email: req.user.xemail
         };
         const token = await jwt.sign(jwtpayload, process.env.tokenSecret, {
             expiresIn: "1d"
@@ -19,6 +20,7 @@ router.get('/auth/google/callback', passport.authenticate('google', { failureRed
         res.cookie("token", token, {
             httpOnly: true
         });
+
         res.redirect(`https://blog-app-mu-vert.vercel.app/auth-handler?id=${token}`)
     });
 

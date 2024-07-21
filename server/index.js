@@ -32,7 +32,6 @@ app.use(
         resave: false,
         saveUninitialized: true
     })
-
 );
 app.use(
     cors({
